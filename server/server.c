@@ -2,13 +2,14 @@
 #include <sys/socket.h>
 #include <stdlib.h>
 #include <netinet/in.h>
+#include <string.h>
 
 void main()
 {
     struct sockaddr_in serv; //This is our main socket variable.
     int fd;                  //This is the socket file descriptor that will be used to identify the socket
     int conn;                //This is the connection file descriptor that will be used to distinguish client connections.
-    char message[100] = "";  //This array will store the messages that are sent by the server
+    char message[1000] = ""; //This array will store the messages that are sent by the server
 
     serv.sin_family = AF_INET;
     serv.sin_port = htons(8096); //Define the port at which the server will listen for connections.
@@ -23,11 +24,11 @@ void main()
         int pid;
         if ((pid = fork()) == 0)
         {
-            while (recv(conn, message, 100, 0) > 0)
+            while (recv(conn, message, 1000, 0) > 0)
             {
-                printf("Message Received: %s\n", message);
+                printf("> %s", message);
                 //An extra breaking condition can be added here (to terminate the child process)
-                message = "";
+                memset(message, 0x00, sizeof(message));
             }
             exit(0);
         }
