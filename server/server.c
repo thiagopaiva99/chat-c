@@ -21,13 +21,14 @@ void main()
     //Now we start handling the connections.
     while (conn = accept(fd, (struct sockaddr *)NULL, NULL))
     {
+        printf("New user connected!\n");
+
         int pid;
         if ((pid = fork()) == 0)
         {
             while (recv(conn, message, 1000, 0) > 0)
             {
                 printf("> %s", message);
-                //An extra breaking condition can be added here (to terminate the child process)
                 memset(message, 0x00, sizeof(message));
             }
             exit(0);
